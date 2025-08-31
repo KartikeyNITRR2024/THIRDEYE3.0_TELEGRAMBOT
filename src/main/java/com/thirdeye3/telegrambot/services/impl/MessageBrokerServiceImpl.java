@@ -33,10 +33,10 @@ public class MessageBrokerServiceImpl implements MessageBrokerService {
     @Value("${thirdeye.messageBrokerUrl}")
     private String messageBrokerUrl;
     
-    @Value("${thirdeye.uniqueId}")
+    @Value("${telegrambot.uniqueId}")
     private Integer uniqueId;
 
-    @Value("${thirdeye.uniqueCode}")
+    @Value("${telegrambot.uniqueCode}")
     private String uniqueCode;
     
     @Autowired
