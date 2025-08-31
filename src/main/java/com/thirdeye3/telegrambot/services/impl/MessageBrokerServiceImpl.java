@@ -33,6 +33,12 @@ public class MessageBrokerServiceImpl implements MessageBrokerService {
     @Value("${thirdeye.messageBrokerUrl}")
     private String messageBrokerUrl;
     
+    @Value("${thirdeye.uniqueId}")
+    private Integer uniqueId;
+
+    @Value("${thirdeye.uniqueCode}")
+    private String uniqueCode;
+    
     @Autowired
     private PropertyService propertyService;
 	
@@ -46,7 +52,7 @@ public class MessageBrokerServiceImpl implements MessageBrokerService {
     	}
 		try {
     		Response<List<Message<TelegramMessage>>> response = apiClient.getForObject(
-            		messageBrokerUrl + "/api/message/multiple/" + topicName +"/" +messageBrokerConfig.getTopics().get(topicName).getTopicKey()+"/"+propertyService.getMaximumMessageReadFromMessageBroker(),
+            		messageBrokerUrl + "/api/message/multiple/telegrambot/" + uniqueId + "/" + uniqueCode +"/"+ topicName +"/" +messageBrokerConfig.getTopics().get(topicName).getTopicKey()+"/"+propertyService.getMaximumMessageReadFromMessageBroker(),
                     new ParameterizedTypeReference<Response<List<Message<TelegramMessage>>>>() {}
                     );
     		if (response.isSuccess()) {

@@ -1,6 +1,7 @@
 package com.thirdeye3.telegrambot.services.impl;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,11 +44,15 @@ public class SchedulerServiceImpl implements SchedulerService {
 
     @Value("${telegrambot.uniqueCode}")
     private String uniqueCode;
+    
+    @Value("${telegrambot.priority}")
+    private Integer priority;
 
     @Override
     @Scheduled(cron = "${telegrambot.scheduler.cronToRefreshData}", zone = "${telegrambot.timezone}")
     public void runToRefreshdata() {
         try {
+        	TimeUnit.SECONDS.sleep(priority * 3); 
             initiatier.init();
             logger.info("🔄 Data refreshed at {}", timeManager.getCurrentTime());
         } catch (Exception e) {
