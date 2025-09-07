@@ -34,7 +34,16 @@ public class Bot extends TelegramLongPollingBot {
 
             SendMessage reply = new SendMessage();
             reply.setChatId(chatId);
-            reply.setText(String.format("Hello\nYour chatId is %s. Use this chatId to get message from the bot.\nTHIRDEYE", chatId));
+            reply.setText(String.format(
+            	    "<b>THIRDEYE Notification Service</b>\n" +
+            	    "<i>Your communication gateway</i>\n\n" +
+            	    "📂 <b>Chat ID:</b> <code>%s</code>\n" +
+            	    "🟢 Status: <b>Active</b>\n\n" +
+            	    "Please save this ID to receive all updates and notifications.\n\n" +
+            	    "For assistance, reach out to our support team. We're here to assist you!",
+            	    chatId
+            	));
+            	reply.setParseMode("HTML");
 
             try {
                 execute(reply);
