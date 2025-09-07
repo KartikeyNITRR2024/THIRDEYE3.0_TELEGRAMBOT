@@ -42,6 +42,10 @@ public class MessageSenderServiceImpl implements MessageSenderService {
                 SendMessage sendMessage = new SendMessage();
                 sendMessage.setChatId(telegramMessage.getChatId());
                 sendMessage.setText(chat);
+                if (chat.contains("<b>") || chat.contains("<i>") || chat.contains("<code>")) {
+                    sendMessage.setParseMode("HTML");
+                }
+
                 count1++;
                 try {
                     bot.execute(sendMessage);
@@ -51,6 +55,6 @@ public class MessageSenderServiceImpl implements MessageSenderService {
                 }
             }
         }
-        logger.info("Successfully send {} out of {} messages", count2, count1);
+        logger.info("Successfully sent {} out of {} messages", count2, count1);
     }
 }
