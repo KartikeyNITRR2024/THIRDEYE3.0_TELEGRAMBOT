@@ -27,8 +27,8 @@ public class MessageSenderServiceImpl implements MessageSenderService {
     private Bot bot;
 
     @Override
-    public void readAndSendMessages() {
-        List<Message<TelegramMessage>> messages = messageBrokerService.getMessage("telegramthresold");
+    public void readAndSendMessages(String type) {
+        List<Message<TelegramMessage>> messages = messageBrokerService.getMessage(type);
 
         if (messages.isEmpty()) {
             return;

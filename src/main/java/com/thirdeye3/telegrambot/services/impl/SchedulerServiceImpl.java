@@ -75,7 +75,8 @@ public class SchedulerServiceImpl implements SchedulerService {
     @Override
     @Scheduled(fixedRateString = "${telegrambot.scheduler.runToSendMessage}")
     public void readAndSendMessage() {
-    	messageSenderService.readAndSendMessages();
+    	messageSenderService.readAndSendMessages("users");
+    	messageSenderService.readAndSendMessages("telegramthresold");
         logger.info("Going to read and send messages");
 
     }
