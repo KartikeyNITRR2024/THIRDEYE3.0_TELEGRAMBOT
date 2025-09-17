@@ -36,7 +36,7 @@ public class PropertyServiceImpl implements PropertyService {
     @Override
     public void fetchProperties() {
         Response<Map<String, Object>> response = apiClient.getForObject(
-                baseUrl + "/api/properties/webscrapper/" + uniqueId + "/" + uniqueCode,
+                baseUrl + "/pm/properties/webscrapper/" + uniqueId + "/" + uniqueCode,
                 new ParameterizedTypeReference<Response<Map<String, Object>>>() {}
         );
 

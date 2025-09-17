@@ -52,7 +52,7 @@ public class MessageBrokerServiceImpl implements MessageBrokerService {
     	}
 		try {
     		Response<List<Message<TelegramMessage>>> response = apiClient.getForObject(
-            		messageBrokerUrl + "/api/message/multiple/telegrambot/" + uniqueId + "/" + uniqueCode +"/"+ topicName +"/" +messageBrokerConfig.getTopics().get(topicName).getTopicKey()+"/"+propertyService.getMaximumMessageReadFromMessageBroker(),
+            		messageBrokerUrl + "/mb/message/multiple/telegrambot/" + uniqueId + "/" + uniqueCode +"/"+ topicName +"/" +messageBrokerConfig.getTopics().get(topicName).getTopicKey()+"/"+propertyService.getMaximumMessageReadFromMessageBroker(),
                     new ParameterizedTypeReference<Response<List<Message<TelegramMessage>>>>() {}
                     );
     		if (response.isSuccess()) {
