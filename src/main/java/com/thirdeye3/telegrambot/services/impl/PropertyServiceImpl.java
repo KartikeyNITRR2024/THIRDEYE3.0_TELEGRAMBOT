@@ -1,30 +1,29 @@
 package com.thirdeye3.telegrambot.services.impl;
 
-import java.time.LocalTime;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import com.thirdeye3.telegrambot.dtos.Response;
 import com.thirdeye3.telegrambot.services.PropertyService;
-import com.thirdeye3.telegrambot.utils.ApiClient;
 
 @Service
 public class PropertyServiceImpl implements PropertyService {
 
     private static final Logger logger = LoggerFactory.getLogger(PropertyServiceImpl.class);
-    private Map<String, Object> properties = null;
-    private Long maximumMessageReadFromMessageBroker = null;
 
-    @Autowired
-    private ApiClient apiClient;
+    private Map<String, Object> properties;
+    private Long maximumMessageReadFromMessageBroker;
 
-    @Value("${thirdeye.baseUrlForProperties}")
+    private final RestTemplate restTemplate = new RestTemplate();
+
+    @Value("${thirdeye.baseUrlForGateway}")
     private String baseUrl;
 
     @Value("${telegrambot.uniqueId}")
@@ -33,29 +32,36 @@ public class PropertyServiceImpl implements PropertyService {
     @Value("${telegrambot.uniqueCode}")
     private String uniqueCode;
 
+    @Value("${telegrambot.api.key}")
+    private String telegramApiKey;
+
     @Override
     public void fetchProperties() {
-        Response<Map<String, Object>> response = apiClient.getForObject(
-                baseUrl + "/pm/properties/webscrapper/" + uniqueId + "/" + uniqueCode,
-                new ParameterizedTypeReference<Response<Map<String, Object>>>() {}
-        );
+        String url = baseUrl + "/pm/properties/webscrapper/" + uniqueId + "/" + uniqueCode;
 
-        if (response.isSuccess()) {
-            logger.info("✅ Properties updated.");
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("THIRDEYE-API-KEY", telegramApiKey);
+
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        ResponseEntity<Response<Map<String, Object>>> responseEntity =
+                restTemplate.exchange(url, HttpMethod.GET, entity,
+                        new ParameterizedTypeReference<Response<Map<String, Object>>>() {});
+
+        Response<Map<String, Object>> response = responseEntity.getBody();
+
+        if (response != null && response.isSuccess()) {
             properties = response.getResponse();
-            maximumMessageReadFromMessageBroker = ((Number) properties.getOrDefault("MAXIMUM_MESSAGE_READ_FROM_MESSAGE_BROKER", 50L)).longValue();
-
-            //logger.info("Properties are {}, {}, {}", telegramBotUserName, telegramBotToken);
+            maximumMessageReadFromMessageBroker =
+                    ((Number) properties.getOrDefault("MAXIMUM_MESSAGE_READ_FROM_MESSAGE_BROKER", 50L)).longValue();
+            logger.info("✅ Properties updated.");
         } else {
-            logger.error("❌ Error ({}): {}", response.getErrorCode(), response.getErrorMessage());
-            // propagate error for global handler
-            throw new RuntimeException("Property update failed: " + response.getErrorMessage());
+            throw new RuntimeException("Property update failed: " + (response != null ? response.getErrorMessage() : "null response"));
         }
     }
-    
+
     @Override
     public Long getMaximumMessageReadFromMessageBroker() {
         return maximumMessageReadFromMessageBroker;
     }
 }
-
