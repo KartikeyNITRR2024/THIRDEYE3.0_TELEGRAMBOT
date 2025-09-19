@@ -59,7 +59,7 @@ public class MessageBrokerServiceImpl implements MessageBrokerService {
                     + propertyService.getMaximumMessageReadFromMessageBroker();
 
             HttpHeaders headers = new HttpHeaders();
-            headers.set("THIRDEYE-API-KEY", telegramApiKey);
+            headers.set("TELEGRAMBOT-API-KEY", telegramApiKey);
 
             HttpEntity<Void> entity = new HttpEntity<>(headers);
 

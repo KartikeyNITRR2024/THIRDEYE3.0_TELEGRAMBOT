@@ -37,10 +37,10 @@ public class PropertyServiceImpl implements PropertyService {
 
     @Override
     public void fetchProperties() {
-        String url = baseUrl + "/pm/properties/webscrapper/" + uniqueId + "/" + uniqueCode;
+        String url = baseUrl + "/pm/properties/telegrambot/" + uniqueId + "/" + uniqueCode;
 
         HttpHeaders headers = new HttpHeaders();
-        headers.set("THIRDEYE-API-KEY", telegramApiKey);
+        headers.set("TELEGRAMBOT-API-KEY", telegramApiKey);
 
         HttpEntity<Void> entity = new HttpEntity<>(headers);
 
