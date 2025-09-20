@@ -54,7 +54,7 @@ public class MessageBrokerServiceImpl implements MessageBrokerService {
         }
 
         try {
-            String url = messageBrokerUrl + "/mb/message/telegrambot/" + uniqueId + "/" + uniqueCode + "/"
+            String url = messageBrokerUrl + "/mb/message/telegrambot/multiple/" + uniqueId + "/" + uniqueCode + "/"
                     + topicName + "/" + messageBrokerConfig.getTopics().get(topicName).getTopicKey() + "/"
                     + propertyService.getMaximumMessageReadFromMessageBroker();
 
