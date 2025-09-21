@@ -74,7 +74,7 @@ public class MessageBrokerServiceImpl implements MessageBrokerService {
                 logger.info("Successfully received messages from message broker with topic name {}", topicName);
             } else {
                 throw new MessageBrokerException("Failed to receive messages from message broker with topic name "
-                        + topicName + " " + (response != null ? response.getErrorMessage() : "null response"));
+                        + topicName);
             }
         } catch (Exception e) {
             logger.error("Failed to read data from message broker for topic {}", topicName, e);
