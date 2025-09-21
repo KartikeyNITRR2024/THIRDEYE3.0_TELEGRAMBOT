@@ -77,7 +77,7 @@ public class MessageBrokerServiceImpl implements MessageBrokerService {
                         + topicName);
             }
         } catch (Exception e) {
-            logger.error("Failed to read data from message broker for topic {}", topicName, e);
+            logger.error("Failed to read data from message broker for topic {}", topicName);
         }
 
         return messages;

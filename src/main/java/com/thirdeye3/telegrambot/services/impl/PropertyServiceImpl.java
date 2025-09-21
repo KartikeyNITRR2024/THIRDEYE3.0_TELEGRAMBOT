@@ -56,7 +56,7 @@ public class PropertyServiceImpl implements PropertyService {
                     ((Number) properties.getOrDefault("MAXIMUM_MESSAGE_READ_FROM_MESSAGE_BROKER", 50L)).longValue();
             logger.info("✅ Properties updated.");
         } else {
-            throw new RuntimeException("Property update failed: " + (response != null ? response.getErrorMessage() : "null response"));
+            throw new RuntimeException("Property update failed");
         }
     }
 
