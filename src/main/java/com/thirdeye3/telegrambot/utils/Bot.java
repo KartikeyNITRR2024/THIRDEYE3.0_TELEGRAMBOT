@@ -44,7 +44,7 @@ public class Bot extends TelegramLongPollingBot {
             SendMessage reply = new SendMessage();
             reply.setChatId(chatId);
             reply.setText(messageBuilder.toString());
-            reply.setParseMode("HTML");
+            reply.setParseMode("HTML");  
 
             try {
                 execute(reply);
