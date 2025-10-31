@@ -1,6 +1,7 @@
 package com.thirdeye3.telegrambot.services.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +14,7 @@ import com.thirdeye3.telegrambot.dtos.Message;
 import com.thirdeye3.telegrambot.dtos.TelegramMessage;
 import com.thirdeye3.telegrambot.services.MessageBrokerService;
 import com.thirdeye3.telegrambot.services.MessageSenderService;
-import com.thirdeye3.telegrambot.utils.Bot;
+import com.thirdeye3.telegrambot.utils.GenericBot;
 
 @Service
 public class MessageSenderServiceImpl implements MessageSenderService {
@@ -24,7 +25,7 @@ public class MessageSenderServiceImpl implements MessageSenderService {
     private MessageBrokerService messageBrokerService;
 
     @Autowired
-    private Bot bot;
+    private Map<String, GenericBot> botRegistry;
 
     @Override
     public void readAndSendMessages(String type) {
@@ -33,28 +34,40 @@ public class MessageSenderServiceImpl implements MessageSenderService {
         if (messages.isEmpty()) {
             return;
         }
-        int count1 = 0;
-        int count2 = 0;
+
+        int total = 0;
+        int success = 0;
+
         for (Message<TelegramMessage> message : messages) {
             TelegramMessage telegramMessage = message.getMessage();
 
-            for (String chat : telegramMessage.getChats()) {
+            String chatName = telegramMessage.getChatName();
+            GenericBot bot = botRegistry.get(chatName);
+
+            if (bot == null) {
+                logger.error("❌ No bot available to send messages.");
+                return;
+            }
+
+            for (String chatText : telegramMessage.getChats()) {
                 SendMessage sendMessage = new SendMessage();
                 sendMessage.setChatId(telegramMessage.getChatId());
-                sendMessage.setText(chat);
-                if (chat.contains("<b>") || chat.contains("<i>") || chat.contains("<code>")) {
+                sendMessage.setText(chatText);
+
+                if (chatText.contains("<b>") || chatText.contains("<i>") || chatText.contains("<code>")) {
                     sendMessage.setParseMode("HTML");
                 }
 
-                count1++;
+                total++;
                 try {
                     bot.execute(sendMessage);
-                    count2++;
+                    success++;
                 } catch (TelegramApiException e) {
-                    logger.error("❌ Failed to send message to chat: {}", e.getMessage());
+                    logger.error("❌ Failed to send message: {}", e.getMessage());
                 }
             }
         }
-        logger.info("Successfully sent {} out of {} messages", count2, count1);
+
+        logger.info("✅ Successfully sent {} out of {} messages", success, total);
     }
 }
